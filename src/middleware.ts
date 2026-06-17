@@ -4,7 +4,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const JWT_SECRET = process.env.JWT_SECRET || "manish";
+export const JWT_SECRET = process.env.JWT_SECRET as string;
+
+if (!process.env.JWT_SECRET) {
+  console.error("Error: JWT_SECRET environment variable is not defined in the env configuration.");
+  process.exit(1);
+}
 
 export interface CustomRequest extends Request {
   userId?: string;

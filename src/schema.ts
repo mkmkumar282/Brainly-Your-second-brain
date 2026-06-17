@@ -3,7 +3,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const MONGO_URL = process.env.MONGO_URL || "mongodb+srv://mkmkumar282_db_user:Test123456@cluster0.ly64vmm.mongodb.net/Brainly";
+const MONGO_URL = process.env.MONGO_URL || process.env.MONGO_URI;
+
+if (!MONGO_URL) {
+  console.error("Error: MONGO_URL or MONGO_URI environment variable is not defined in the env configuration.");
+  process.exit(1);
+}
 
 mongoose.connect(MONGO_URL)
   .then(() => console.log("Connected to MongoDB"))
