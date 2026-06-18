@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Link2, FileText, Sparkles, Video, Share2, Trash2, ArrowUpRight, Copy, Check, RotateCcw } from 'lucide-react';
+import { Link2, FileText, Sparkles, Video, Trash2, ArrowUpRight, Copy, Check, RotateCcw } from 'lucide-react';
 import { TwitterIcon } from './Icons';
 import type { ContentItem } from '../types';
 
 interface CardProps {
   item: ContentItem;
   onDelete: (id: string) => void;
-  onShare?: (item: ContentItem) => void;
   isTrashView?: boolean;
   onRestore?: (id: string) => void;
   isPublicView?: boolean;
@@ -15,7 +14,6 @@ interface CardProps {
 export default function Card({
   item,
   onDelete,
-  onShare,
   isTrashView = false,
   onRestore,
   isPublicView = false,
@@ -84,7 +82,7 @@ export default function Card({
             <span>{type}</span>
           </span>
 
-          {/* Action buttons (hidden on default view if public and no share/delete allowed) */}
+          {/* Action buttons */}
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             {isTrashView ? (
               <>
@@ -114,15 +112,6 @@ export default function Card({
                     title="Copy resource URL"
                   >
                     {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                )}
-                {!isPublicView && onShare && (
-                  <button
-                    onClick={() => onShare(item)}
-                    className="p-1.5 text-secondary hover:text-primary hover:bg-background rounded-lg transition-all"
-                    title="Share details"
-                  >
-                    <Share2 className="h-4 w-4" />
                   </button>
                 )}
                 {!isPublicView && (

@@ -8,7 +8,7 @@ import AuthModal from './components/AuthModal';
 import { getContent, addContent, deleteContent, toggleShare, getShareStatus, getSharedContent, isAuthenticated, getUsername, logout } from './services/api';
 import { useTheme } from './hooks/useTheme';
 import type { ContentItem, ContentType } from './types';
-import { Brain, Plus, AlertCircle, Globe, LayoutGrid, Sun, Moon } from 'lucide-react';
+import { Brain, Plus, AlertCircle, Globe, LayoutGrid, Sun, Moon, Search, X } from 'lucide-react';
 
 export default function App() {
   const { theme, toggleTheme } = useTheme();
@@ -81,6 +81,7 @@ export default function App() {
   const [sharedItems, setSharedItems] = useState<ContentItem[]>([]);
   const [sharedError, setSharedError] = useState('');
   const [sharedLoading, setSharedLoading] = useState(false);
+  const [sharedSearchQuery, setSharedSearchQuery] = useState('');
 
   useEffect(() => {
     if (route.path === 'shared' && route.param) {
@@ -260,22 +261,76 @@ export default function App() {
                 <p className="text-sm text-secondary mt-1">Browse through the resources and insights compiled in this shared workspace.</p>
               </div>
 
-              {sharedItems.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl">
-                  <p className="text-sm text-secondary italic">This workspace is currently empty.</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {sharedItems.map((item) => (
-                    <Card
-                      key={item._id}
-                      item={item}
-                      onDelete={() => {}}
-                      isPublicView={true}
-                    />
-                  ))}
-                </div>
-              )}
+              {/* Search Box */}
+              <div className="relative w-full max-w-lg">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 text-secondary pointer-events-none">
+                  <Search className="h-4 w-4" />
+                </span>
+                <input
+                  type="text"
+                  value={sharedSearchQuery}
+                  onChange={(e) => setSharedSearchQuery(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Escape') setSharedSearchQuery(''); }}
+                  placeholder="Search this shared workspace..."
+                  className="w-full bg-background border border-border text-primary text-sm rounded-lg pl-10 pr-9 py-2.5 focus:outline-none focus:ring-1 focus:ring-accent focus:border-accent transition-all placeholder:text-secondary/60"
+                />
+                {sharedSearchQuery && (
+                  <button
+                    onClick={() => setSharedSearchQuery('')}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-secondary/60 hover:text-primary transition-colors focus:outline-none"
+                    title="Clear search"
+                    tabIndex={-1}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {(() => {
+                const query = sharedSearchQuery.toLowerCase().trim();
+                const filteredShared = query
+                  ? sharedItems.filter(
+                      (item) =>
+                        item.title.toLowerCase().includes(query) ||
+                        item.description?.toLowerCase().includes(query) ||
+                        item.tags?.some((tag) => tag.toLowerCase().includes(query)) ||
+                        item.type.toLowerCase().includes(query)
+                    )
+                  : sharedItems;
+
+                if (sharedItems.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl">
+                      <p className="text-sm text-secondary italic">This workspace is currently empty.</p>
+                    </div>
+                  );
+                }
+
+                if (filteredShared.length === 0) {
+                  return (
+                    <div className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-border rounded-xl">
+                      <Search className="h-8 w-8 text-secondary/30 mb-3" />
+                      <p className="text-sm font-semibold text-primary">No results found</p>
+                      <p className="text-xs text-secondary mt-1 max-w-xs text-center">
+                        No items match "{sharedSearchQuery}". Try a different keyword.
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredShared.map((item) => (
+                      <Card
+                        key={item._id}
+                        item={item}
+                        onDelete={() => {}}
+                        isPublicView={true}
+                      />
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
           )}
         </main>
@@ -452,15 +507,6 @@ export default function App() {
                     onDelete={activeFilter === 'trash' ? handlePermanentDelete : handleDeleteItem}
                     onRestore={activeFilter === 'trash' ? handleRestoreItem : undefined}
                     isTrashView={activeFilter === 'trash'}
-                    onShare={(clicked) => {
-                      // Automatically triggers sharing copy links if sharing is enabled
-                      if (isSharing && shareHash) {
-                        navigator.clipboard.writeText(`${window.location.origin}/share/${shareHash}`);
-                        alert('Workspace share link copied to clipboard!');
-                      } else {
-                        alert(`Copy resource link directly from details! Title: ${clicked.title}`);
-                      }
-                    }}
                   />
                 ))}
               </div>
