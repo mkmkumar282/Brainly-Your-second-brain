@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { signupSchema, signinSchema, contentValidationSchema, shareValidationSchema } from "./zod.js";
@@ -9,17 +10,7 @@ import type { CustomRequest } from "./middleware.js";
 const app = express();
 
 app.use(express.json());
-
-// Enable CORS middleware
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, token");
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
-});
+app.use(cors());
 
 app.post("/signup", async function (req, res) {
     const result = signupSchema.safeParse(req.body);
