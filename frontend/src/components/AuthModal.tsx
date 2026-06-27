@@ -32,7 +32,7 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
         await signin(username, password);
       } else {
         await signup(username, password);
-        // Automatically sign in after successful signup
+        
         await signin(username, password);
       }
       onSuccess();

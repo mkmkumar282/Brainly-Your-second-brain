@@ -106,10 +106,10 @@ export async function getShareStatus() {
     headers: getHeaders(),
   });
   if (!res.ok) {
-    // Not sharing if the request fails
+    
     return { isSharing: false, hash: null };
   }
-  return res.json(); // returns { isSharing: boolean, hash: string | null }
+  return res.json(); 
 }
 
 export async function toggleShare(share: boolean) {
@@ -122,7 +122,7 @@ export async function toggleShare(share: boolean) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || 'Failed to toggle share');
   }
-  return res.json(); // returns { hash } or { message }
+  return res.json(); 
 }
 
 export async function getSharedContent(hash: string) {
@@ -134,5 +134,5 @@ export async function getSharedContent(hash: string) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || 'Failed to fetch shared content');
   }
-  return res.json(); // returns { username, content: [] }
+  return res.json(); 
 }

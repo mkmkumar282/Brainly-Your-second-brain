@@ -158,7 +158,7 @@ app.delete("/content", middleWare, async function (req: CustomRequest, res) {
     }
 });
 
-// GET /share — read current share status non-destructively
+
 app.get("/share", middleWare, async function (req: CustomRequest, res) {
     try {
         const existingLink = await linkModel.findOne({ userId: req.userId! });

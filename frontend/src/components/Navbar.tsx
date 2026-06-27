@@ -21,7 +21,7 @@ export default function Navbar({
 }: NavbarProps) {
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 shrink-0 z-10">
-      {/* Mobile Sidebar Trigger & Search */}
+      
       <div className="flex items-center gap-4 flex-1 max-w-lg">
         <button
           onClick={onMenuToggle}

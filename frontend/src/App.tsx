@@ -13,30 +13,30 @@ import { Brain, Plus, AlertCircle, Globe, LayoutGrid, Sun, Moon, Search, X } fro
 export default function App() {
   const { theme, toggleTheme } = useTheme();
   
-  // Auth states
+  
   const [auth, setAuth] = useState(isAuthenticated());
   const [username, setUsername] = useState(getUsername());
   
-  // Data states
+  
   const [items, setItems] = useState<ContentItem[]>([]);
   const [trashItems, setTrashItems] = useState<ContentItem[]>([]);
   const [collections, setCollections] = useState<string[]>(['Coding', 'Design', 'Reading List', 'Tweets Archive']);
   
-  // UI states
+  
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeCollection, setActiveCollection] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   
-  // Share link states
+  
   const [isSharing, setIsSharing] = useState(false);
   const [shareHash, setShareHash] = useState<string | null>(null);
   
-  // Router states
+  
   const [route, setRoute] = useState<{ path: string; param?: string }>({ path: 'dashboard' });
 
-  // Handle URL hashes or paths for simple routing
+  
   useEffect(() => {
     const handleUrlRouting = () => {
       const path = window.location.pathname;
@@ -55,7 +55,7 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleUrlRouting);
   }, []);
 
-  // Fetch items and share status when authenticated
+  
   useEffect(() => {
     if (auth && route.path === 'dashboard') {
       fetchData();
@@ -67,7 +67,7 @@ export default function App() {
       const res = await getContent();
       setItems(res.contents || []);
 
-      // Read current share status non-destructively (GET, not POST)
+      
       const shareStatus = await getShareStatus().catch(() => ({ isSharing: false, hash: null }));
       setIsSharing(shareStatus.isSharing);
       setShareHash(shareStatus.hash ?? null);
@@ -76,7 +76,7 @@ export default function App() {
     }
   };
 
-  // Public shared dashboard state
+  
   const [sharedUser, setSharedUser] = useState('');
   const [sharedItems, setSharedItems] = useState<ContentItem[]>([]);
   const [sharedError, setSharedError] = useState('');
@@ -106,7 +106,7 @@ export default function App() {
   const handleLoginSuccess = () => {
     setAuth(true);
     setUsername(getUsername());
-    // Refresh page state to normal dashboard path
+    
     window.history.pushState({}, '', '/');
     setRoute({ path: 'dashboard' });
   };
@@ -133,7 +133,7 @@ export default function App() {
   };
 
   const handleDeleteItem = async (id: string) => {
-    // If we're deleting from the active dashboard list, move to virtual trash
+    
     const itemToTrash = items.find(item => item._id === id);
     if (itemToTrash) {
       setTrashItems(prev => [itemToTrash, ...prev]);
@@ -179,14 +179,14 @@ export default function App() {
     }
   };
 
-  // Filter Items logic
+  
   const getFilteredItems = () => {
-    // If there is an active search query, perform a GLOBAL search across ALL items
-    // regardless of activeFilter. This mirrors how Notion/Obsidian/Linear search works —
-    // search is a universal operation, not scoped to the current category tab.
+    
+    
+    
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase().trim();
-      // Always search the full items array (never trashItems — trash is a separate scope)
+      
       return items.filter(item =>
         item.title.toLowerCase().includes(query) ||
         item.description?.toLowerCase().includes(query) ||
@@ -195,15 +195,15 @@ export default function App() {
       );
     }
 
-    // No search query — apply normal navigation filters
+    
     let list = activeFilter === 'trash' ? trashItems : items;
 
-    // Filter by type if not 'all', 'shared', or 'trash'
+    
     if (activeFilter !== 'all' && activeFilter !== 'shared' && activeFilter !== 'trash') {
       list = list.filter(item => item.type === activeFilter);
     }
 
-    // Filter by active collection tag
+    
     if (activeCollection) {
       list = list.filter(item =>
         item.tags?.some(tag => tag.toLowerCase() === activeCollection.toLowerCase())
@@ -215,11 +215,11 @@ export default function App() {
 
   const filteredItems = getFilteredItems();
 
-  // Public View rendering
+  
   if (route.path === 'shared') {
     return (
       <div className="min-h-screen bg-background text-primary flex flex-col font-sans">
-        {/* Public Header */}
+        
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 shrink-0 shadow-subtle">
           <div className="flex items-center gap-2.5">
             <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center text-white">

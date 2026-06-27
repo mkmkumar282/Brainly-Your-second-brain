@@ -50,7 +50,7 @@ export default function AddContentModal({
       return;
     }
 
-    // Validation per tab type
+    
     if ((activeTab === 'link' || activeTab === 'tweet' || activeTab === 'video') && !link.trim()) {
       setError(`Link is required for type "${activeTab}"`);
       return;
@@ -58,7 +58,7 @@ export default function AddContentModal({
 
     setLoading(true);
     try {
-      // Parse tags
+      
       const tagList = tagsInput
         .split(',')
         .map((t) => t.trim().toLowerCase())
@@ -76,7 +76,7 @@ export default function AddContentModal({
         tags: tagList,
       });
 
-      // Clear form on success
+      
       setTitle('');
       setLink('');
       setDescription('');
@@ -92,7 +92,7 @@ export default function AddContentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-      {/* Click Outside to Close */}
+      
       <div className="absolute inset-0" onClick={onClose} />
 
       <div className="relative w-full max-w-lg bg-card border border-border rounded-xl shadow-premium overflow-hidden transition-all transform scale-100 flex flex-col max-h-[90vh]">

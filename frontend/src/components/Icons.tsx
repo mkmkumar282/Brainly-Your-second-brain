@@ -11,7 +11,7 @@ export function TwitterIcon(props: React.SVGProps<SVGSVGElement>) {
       strokeLinejoin="round"
       {...props}
     >
-      {/* X/Twitter logo as two clean diagonal strokes */}
+      
       <path d="M4 4l16 16" />
       <path d="M20 4L4 20" />
     </svg>

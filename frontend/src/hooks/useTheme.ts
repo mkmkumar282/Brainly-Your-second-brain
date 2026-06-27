@@ -6,7 +6,7 @@ export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('brainly-theme');
     if (saved === 'light' || saved === 'dark') return saved;
-    // Default to dark mode as requested in the dark theme palette
+    
     return 'dark';
   });
 

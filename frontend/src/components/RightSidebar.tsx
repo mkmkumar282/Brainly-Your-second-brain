@@ -20,7 +20,7 @@ export default function RightSidebar({
 }: RightSidebarProps) {
   const [copied, setCopied] = useState(false);
 
-  // Statistics calculations
+  
   const totalItems = items.length;
   const linkCount = items.filter((i) => i.type === 'link').length;
   const noteCount = items.filter((i) => i.type === 'note').length;
@@ -38,7 +38,7 @@ export default function RightSidebar({
     }
   };
 
-  // Get recently added items (last 3)
+  
   const recentlyAdded = [...items]
     .sort((a, b) => {
       const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
@@ -51,7 +51,7 @@ export default function RightSidebar({
     <aside className="w-80 bg-card border-l border-border flex flex-col shrink-0 h-full overflow-y-auto no-scrollbar">
       <div className="p-6 space-y-8">
 
-        {/* [1] Share Your Brain — PRIMARY, always at top */}
+        
         <div>
           <div className="flex items-center gap-2 mb-3.5">
             <Share2 className="h-4 w-4 text-accent" />

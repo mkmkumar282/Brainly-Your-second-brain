@@ -22,7 +22,7 @@ export default function Card({
 
   const { _id, title, type, link, description, tags, createdAt } = item;
 
-  // Icon mapping
+  
   const typeIcons = {
     link: Link2,
     note: FileText,
@@ -33,7 +33,7 @@ export default function Card({
 
   const Icon = typeIcons[type] || Link2;
 
-  // Type theme coloring for cards
+  
   const typeThemes = {
     link: 'border-blue-500/20 text-blue-500 bg-blue-500/5',
     note: 'border-emerald-500/20 text-emerald-500 bg-emerald-500/5',
@@ -44,7 +44,7 @@ export default function Card({
 
   const themeClass = typeThemes[type] || typeThemes.link;
 
-  // Date formatter
+  
   const formattedDate = createdAt
     ? new Date(createdAt).toLocaleDateString(undefined, {
         year: 'numeric',
@@ -53,7 +53,7 @@ export default function Card({
       })
     : 'Unknown Date';
 
-  // Helper to extract YouTube video ID
+  
   const getYouTubeId = (url?: string) => {
     if (!url) return null;
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -73,16 +73,16 @@ export default function Card({
   return (
     <article className="bg-card border border-border rounded-xl p-5 hover:border-accent/30 hover:shadow-subtle transition-all duration-200 flex flex-col justify-between space-y-4 group">
       
-      {/* Card Header */}
+      
       <div className="space-y-2.5">
         <div className="flex items-center justify-between gap-2">
-          {/* Resource Type Tag */}
+          
           <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-semibold uppercase tracking-wider border ${themeClass}`}>
             <Icon className="h-3 w-3 shrink-0" />
             <span>{type}</span>
           </span>
 
-          {/* Action buttons */}
+          
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             {isTrashView ? (
               <>

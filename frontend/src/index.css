@@ -31,7 +31,7 @@
   }
 }
 
-/* Premium Scrollbars */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -50,7 +50,7 @@
   background: var(--text-secondary);
 }
 
-/* Custom Utilities */
+
 .glass-effect {
   backdrop-filter: blur(8px);
 }

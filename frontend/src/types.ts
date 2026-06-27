@@ -12,7 +12,7 @@ export interface ContentItem {
   link?: string;
   description?: string;
   tags?: string[];
-  tag?: string; // for backward compatibility
+  tag?: string; 
   userId: {
     _id: string;
     username: string;
@@ -24,5 +24,5 @@ export interface ContentItem {
 export interface SidebarItem {
   id: string;
   name: string;
-  icon: any; // Lucide icon component
+  icon: any; 
 }

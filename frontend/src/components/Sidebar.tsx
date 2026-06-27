@@ -58,13 +58,13 @@ export default function Sidebar({
 
   const handleCollectionClick = (name: string) => {
     setActiveCollection(name === activeCollection ? null : name);
-    setActiveFilter('all'); // default to all contents when clicking collection
+    setActiveFilter('all'); 
     onClose();
   };
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      
       {isOpen && (
         <div 
           className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden" 
@@ -98,9 +98,9 @@ export default function Sidebar({
             </button>
           </div>
 
-          {/* Navigation Scrollable Area */}
+          
           <div className="flex-1 overflow-y-auto px-4 py-6 space-y-7 no-scrollbar">
-            {/* main section */}
+            
             <div>
               <span className="block text-xs font-semibold uppercase tracking-wider text-secondary px-3 mb-2.5">
                 Categories
