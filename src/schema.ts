@@ -29,6 +29,12 @@ const contentSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 
+// Text index on title + description — required for MongoDB $text search.
+// Equivalent to: db.contents.createIndex({ title: "text", description: "text" })
+// MongoDB will use this index when searchRelevantNotes() runs a $text query.
+// The index is created once on app startup; Mongoose is idempotent here.
+contentSchema.index({ title: "text", description: "text" });
+
 const linkSchema = new mongoose.Schema({
     hash: { type: String, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },

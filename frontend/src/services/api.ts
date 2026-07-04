@@ -56,6 +56,24 @@ export function isAuthenticated() {
   return !!localStorage.getItem('brainly-token');
 }
 
+/**
+ * Decodes the JWT stored in localStorage to extract the user's _id.
+ * JWTs are base64url-encoded; we grab the payload (middle segment),
+ * base64-decode it, and parse the JSON — no extra library needed.
+ */
+export function getUserId(): string | null {
+  const token = localStorage.getItem('brainly-token');
+  if (!token) return null;
+  try {
+    const payload = token.split('.')[1];              // grab the payload segment
+    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));  // base64url → base64 → string
+    const { id } = JSON.parse(decoded);              // our backend signs with { id: user._id }
+    return id || null;
+  } catch {
+    return null; // malformed token
+  }
+}
+
 export async function addContent(params: {
   title: string;
   type: string;
@@ -135,4 +153,28 @@ export async function getSharedContent(hash: string) {
     throw new Error(err.message || 'Failed to fetch shared content');
   }
   return res.json(); 
+}
+
+/**
+ * Sends the user's question to the backend AI endpoint.
+ * The backend runs: extractKeywords → searchRelevantNotes → buildContext → askAI (Gemini).
+ *
+ * Returns:
+ *   answer      — the AI's response text
+ *   sourcesUsed — list of note titles the AI read (for citations in the UI)
+ */
+export async function askAI(
+  userId: string,
+  question: string
+): Promise<{ answer: string; sourcesUsed: string[] }> {
+  const res = await fetch(`${API_BASE_URL}/api/ask`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, question }),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || 'AI request failed');
+  }
+  return res.json(); // { answer, sourcesUsed }
 }

@@ -1,9 +1,10 @@
-import { Menu, Search, X, Sun, Moon, Plus, User } from 'lucide-react';
+import { Menu, Search, X, Sun, Moon, Plus, User, Sparkles } from 'lucide-react';
 
 interface NavbarProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onAddContentClick: () => void;
+  onAskAiClick: () => void;
   theme: 'light' | 'dark';
   toggleTheme: () => void;
   onMenuToggle: () => void;
@@ -14,6 +15,7 @@ export default function Navbar({
   searchQuery,
   setSearchQuery,
   onAddContentClick,
+  onAskAiClick,
   theme,
   toggleTheme,
   onMenuToggle,
@@ -66,6 +68,18 @@ export default function Navbar({
 
       {/* Action Controls */}
       <div className="flex items-center gap-3.5 pl-4 shrink-0">
+        {/* Ask AI Button */}
+        <button
+          id="ask-ai-btn"
+          onClick={onAskAiClick}
+          className="hidden sm:flex items-center gap-2 text-white hover:opacity-95 text-sm font-semibold rounded-lg px-4 py-2 shadow-subtle active:scale-[0.98] transition-all"
+          style={{ background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 100%)' }}
+          title="Ask AI about your notes"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>Ask AI</span>
+        </button>
+
         {/* Add Content Button */}
         <button
           onClick={onAddContentClick}

@@ -6,6 +6,7 @@ import { signupSchema, signinSchema, contentValidationSchema, shareValidationSch
 import { userModel, contentModel, linkModel } from "./schema.js";
 import { middleWare, JWT_SECRET } from "./middleware.js";
 import type { CustomRequest } from "./middleware.js";
+import { extractKeywords, searchRelevantNotes, buildContext, askAI } from "./ai.js";
 
 const app = express();
 
@@ -211,6 +212,45 @@ app.post("/share", middleWare, async function (req: CustomRequest, res) {
         });
     }
 });
+
+app.post("/api/ask", async function (req, res) {
+    const { userId, question } = req.body;
+
+    if (!userId || !question) {
+        return res.status(400).json({
+            message: "Both 'userId' and 'question' are required.",
+        });
+    }
+
+
+    const keywords = extractKeywords(question);
+
+    if (keywords.length === 0) {
+        return res.status(400).json({
+            message: "Your question didn't contain any searchable keywords. Please rephrase.",
+        });
+    }
+
+    const relevantNotes = await searchRelevantNotes(keywords, userId);
+
+    const { contextText, sourceTitles } = buildContext(relevantNotes);
+
+    try {
+        const answer = await askAI(contextText, question);
+
+        return res.json({
+            answer,
+            sourcesUsed: sourceTitles,
+        });
+    } catch (err: any) {
+        console.error("Gemini API error:", err.message);
+        return res.status(500).json({
+            message: "AI service failed. Please try again later.",
+            error: err.message,
+        });
+    }
+});
+
 
 app.get("/:shareLink", async function (req, res) {
     try {

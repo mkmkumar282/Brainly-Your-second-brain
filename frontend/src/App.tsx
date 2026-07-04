@@ -4,8 +4,9 @@ import Navbar from './components/Navbar';
 import RightSidebar from './components/RightSidebar';
 import Card from './components/Card';
 import AddContentModal from './components/AddContentModal';
+import AiChatModal from './components/AiChatModal';
 import AuthModal from './components/AuthModal';
-import { getContent, addContent, deleteContent, toggleShare, getShareStatus, getSharedContent, isAuthenticated, getUsername, logout } from './services/api';
+import { getContent, addContent, deleteContent, toggleShare, getShareStatus, getSharedContent, isAuthenticated, getUsername, logout, getUserId } from './services/api';
 import { useTheme } from './hooks/useTheme';
 import type { ContentItem, ContentType } from './types';
 import { Brain, Plus, AlertCircle, Globe, LayoutGrid, Sun, Moon, Search, X } from 'lucide-react';
@@ -28,6 +29,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   
   
   const [isSharing, setIsSharing] = useState(false);
@@ -435,6 +437,7 @@ export default function App() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onAddContentClick={() => setIsAddModalOpen(true)}
+          onAskAiClick={() => setIsAiModalOpen(true)}
           theme={theme}
           toggleTheme={toggleTheme}
           onMenuToggle={() => setIsSidebarOpen(true)}
@@ -536,6 +539,13 @@ export default function App() {
         onClose={() => setIsAddModalOpen(false)}
         onAdd={handleAddItem}
         collections={collections}
+      />
+
+      {/* AI Chat Modal */}
+      <AiChatModal
+        isOpen={isAiModalOpen}
+        onClose={() => setIsAiModalOpen(false)}
+        userId={getUserId()}
       />
 
     </div>
