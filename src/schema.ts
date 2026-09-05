@@ -36,8 +36,8 @@ const contentSchema = new mongoose.Schema({
 contentSchema.index({ title: "text", description: "text" });
 
 const linkSchema = new mongoose.Schema({
-    hash: { type: String, required: true },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    hash: { type: String, required: true, unique: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
 });
 
 export const userModel = mongoose.model("User", userSchema);

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { signupSchema, signinSchema, contentValidationSchema, shareValidationSchema } from "./zod.js";
 import { userModel, contentModel, linkModel } from "./schema.js";
@@ -190,11 +191,23 @@ app.post("/share", middleWare, async function (req: CustomRequest, res) {
                 });
             }
 
-            const hash = Math.random().toString(36).substring(2, 12);
-            await linkModel.create({
-                hash,
-                userId: req.userId!,
-            });
+            let hash = crypto.randomBytes(6).toString("hex");
+            let created = false;
+            while (!created) {
+                try {
+                    await linkModel.create({
+                        hash,
+                        userId: req.userId!,
+                    });
+                    created = true;
+                } catch (err: any) {
+                    if (err.code === 11000 && err.keyPattern?.hash) {
+                        hash = crypto.randomBytes(6).toString("hex");
+                    } else {
+                        throw err;
+                    }
+                }
+            }
 
             res.json({
                 hash,
